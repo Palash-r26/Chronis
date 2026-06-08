@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy.orm import Session
-from .database import engine, Base, SessionLocal
-from .models import User, BehavioralData, UserSettings
+from database import engine, Base, SessionLocal
+from models import User, BehavioralData, UserSettings
 import bcrypt
 from datetime import datetime
 import os

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import engine, Base
-from .routes import auth, dashboard, insights, timeline, settings, users
+from database import engine, Base
+from routes import auth, dashboard, insights, timeline, settings, users
 import os
 from dotenv import load_dotenv
 load_dotenv()

@@ -16,7 +16,13 @@ const Login = () => {
     try {
       await login(email, password);
     } catch (err) {
-      setError('Invalid email or password');
+      if (!err.response) {
+        setError('Network error: Could not connect to the server');
+      } else if (err.response.status === 401) {
+        setError('Invalid email or password');
+      } else {
+        setError(err.response?.data?.detail || 'An error occurred during login');
+      }
     } finally {
       setIsLoading(false);
     }
