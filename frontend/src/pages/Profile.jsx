@@ -6,7 +6,10 @@ import { User, Mail, Calendar, ShieldCheck } from 'lucide-react';
 const Profile = () => {
   const { user, setUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({ name: user?.name || '', email: user?.email || '' });
+  const [formData, setFormData] = useState({ 
+    name: user?.name || '', 
+    profile_photo_url: user?.profile_photo_url || '' 
+  });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -41,10 +44,14 @@ const Profile = () => {
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
           <div className="bg-card border border-white/5 rounded-2xl p-8 flex flex-col items-center text-center">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-secondary p-1 mb-6 shadow-lg shadow-primary/20">
-              <div className="w-full h-full rounded-full bg-surface flex items-center justify-center text-4xl font-display font-bold text-white">
-                {getInitials(user?.name)}
-              </div>
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-secondary p-1 mb-6 shadow-lg shadow-primary/20 overflow-hidden relative group">
+              {user?.profile_photo_url ? (
+                <img src={user.profile_photo_url} alt="Profile" className="w-full h-full rounded-full object-cover bg-surface" />
+              ) : (
+                <div className="w-full h-full rounded-full bg-surface flex items-center justify-center text-4xl font-display font-bold text-white">
+                  {getInitials(user?.name)}
+                </div>
+              )}
             </div>
             
             <h3 className="text-2xl font-bold font-display">{user?.name}</h3>
@@ -70,7 +77,7 @@ const Profile = () => {
               <button 
                 onClick={() => {
                   setIsEditing(!isEditing);
-                  if (!isEditing) setFormData({ name: user.name, email: user.email });
+                  if (!isEditing) setFormData({ name: user?.name || '', profile_photo_url: user?.profile_photo_url || '' });
                 }}
                 className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
               >
@@ -97,15 +104,30 @@ const Profile = () => {
               </div>
               
               <div>
-                <label className="block text-textSecondary text-sm mb-2">Email Address</label>
+                <label className="block text-textSecondary text-sm mb-2">Profile Photo URL</label>
                 <div className="relative">
+                  <User size={20} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-textSecondary" />
+                  <input
+                    type="url"
+                    value={formData.profile_photo_url}
+                    onChange={(e) => setFormData({...formData, profile_photo_url: e.target.value})}
+                    disabled={!isEditing}
+                    placeholder="https://example.com/photo.jpg"
+                    className="w-full bg-surface border border-white/10 rounded-xl pl-12 pr-4 py-3 text-textPrimary focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-textSecondary text-sm mb-2">Email Address (Locked)</label>
+                <div className="relative opacity-70">
                   <Mail size={20} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-textSecondary" />
                   <input
                     type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    disabled={!isEditing}
-                    className="w-full bg-surface border border-white/10 rounded-xl pl-12 pr-4 py-3 text-textPrimary focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
+                    value={user?.email || ''}
+                    disabled={true}
+                    readOnly={true}
+                    className="w-full bg-surface border border-white/10 rounded-xl pl-12 pr-4 py-3 text-textPrimary focus:outline-none focus:border-primary transition-colors cursor-not-allowed"
                   />
                 </div>
               </div>

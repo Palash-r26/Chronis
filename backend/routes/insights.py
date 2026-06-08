@@ -8,6 +8,9 @@ router = APIRouter()
 
 @router.get("/{user_id}")
 def get_insights(user_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    if current_user.role != "admin" and user_id != current_user.linked_user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to view this data profile")
+
     data = db.query(BehavioralData).filter(BehavioralData.user_id == user_id).all()
     if not data:
         raise HTTPException(status_code=404, detail="No data found for user")

@@ -12,6 +12,8 @@ class UserResponse(BaseModel):
     name: str
     email: str
     linked_user_id: str
+    role: str
+    profile_photo_url: Optional[str] = None
     created_at: datetime
 
     class Config:

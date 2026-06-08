@@ -10,6 +10,8 @@ class User(Base):
     email = Column(String(100), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     linked_user_id = Column(String(10), default="U1")
+    role = Column(String(50), default="user")
+    profile_photo_url = Column(String(255), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class BehavioralData(Base):

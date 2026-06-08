@@ -16,6 +16,9 @@ def get_timeline(
     db: Session = Depends(get_db), 
     current_user: User = Depends(get_current_user)
 ):
+    if current_user.role != "admin" and user_id != current_user.linked_user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to view this data profile")
+
     query = db.query(BehavioralData).filter(BehavioralData.user_id == user_id)
     if start:
         query = query.filter(BehavioralData.date >= start)

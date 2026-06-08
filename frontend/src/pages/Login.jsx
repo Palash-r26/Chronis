@@ -7,6 +7,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [role, setRole] = useState('user');
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
@@ -40,6 +41,21 @@ const Login = () => {
             {error}
           </div>
         )}
+
+        <div className="flex space-x-4 mb-6">
+          <button 
+            onClick={() => setRole('user')} 
+            className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${role === 'user' ? 'bg-primary text-white' : 'bg-surface text-textSecondary hover:text-textPrimary'}`}
+          >
+            Standard User
+          </button>
+          <button 
+            onClick={() => setRole('admin')} 
+            className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${role === 'admin' ? 'bg-primary text-white' : 'bg-surface text-textSecondary hover:text-textPrimary'}`}
+          >
+            Administrator
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
