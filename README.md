@@ -15,10 +15,10 @@ It features a stunning dark-mode optimized glassmorphism UI, interactive charts,
 
 | | |
 |:---:|:---:|
-| ![View 1](frontend/public/app-1.png)<br><b>Dashboard & Insights</b> | ![View 2](frontend/public/app-2.png)<br><b>Timeline & History</b> |
-| ![View 3](frontend/public/app-3.png)<br><b>AI Correlation Engine</b> | ![View 4](frontend/public/app-4.png)<br><b>Admin Control Panel</b> |
-| ![View 5](frontend/public/app-5.png)<br><b>User Management</b> | ![View 6](frontend/public/app-6.png)<br><b>Settings & Preferences</b> |
-| ![View 7](frontend/public/app-7.png)<br><b>Dark Mode UI</b> | |
+| ![Landing](frontend/public/app-1.png)<br><b>Landing Page</b> | ![About](frontend/public/app-8.png)<br><b>About Page</b> |
+| ![Login](frontend/public/app-3.png)<br><b>Login</b> | ![How it works](frontend/public/app-2.png)<br><b>How it works</b> |
+| ![Dashboard](frontend/public/app-4.png)<br><b>User Dashboard</b> | ![Timeline](frontend/public/app-5.png)<br><b>Timeline</b> |
+| ![Admin Portal](frontend/public/app-6.png)<br><b>Admin Portal</b> | ![Profile](frontend/public/app-7.png)<br><b>Profile Page</b> |
 
 ---
 
