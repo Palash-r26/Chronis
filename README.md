@@ -1,63 +1,130 @@
-# Chronis - Behavioral Analytics Web App
+# ⏳ Chronis - Behavioral Analytics Platform
 
-Chronis is a full-stack behavioral analytics web application that tracks daily data (sleep, steps, screen time, deep work, exercise) and surfaces meaningful insights, trends, and patterns through a modern UI.
+Chronis is a modern, full-stack behavioral analytics web application. It empowers users to track their daily habits (sleep, steps, screen time, deep work, and exercise) and uses data aggregation to surface meaningful insights, 30-day trends, and behavioral correlations.
 
-## Tech Stack
-- **Frontend**: React, Vite, Tailwind CSS, Recharts
-- **Backend**: FastAPI, SQLAlchemy, PostgreSQL (SQLite for local dev), Passlib/Bcrypt, JWT
+It features a stunning dark-mode optimized glassmorphism UI, interactive charts, AI-driven insights, and a comprehensive **Admin Portal** for user management.
 
-## Screenshots
-*(Add screenshots here after deploying)*
+---
 
-## How to run locally
+## 🛠 Tech Stack
+
+**Frontend Architecture:**
+- **React 18** + **Vite** (Blazing fast development & builds)
+- **Tailwind CSS** (Utility-first styling, custom dark mode, glassmorphism)
+- **Framer Motion** (Micro-animations and page transitions)
+- **Recharts** (Interactive data visualization)
+- **React Router** (Client-side routing)
+- **Lucide React** (Consistent icon system)
+
+**Backend Architecture:**
+- **FastAPI** (High-performance Python web framework)
+- **SQLAlchemy** (ORM for database interactions)
+- **SQLite / PostgreSQL** (Data persistence)
+- **Passlib & Bcrypt** (Secure password hashing)
+- **JWT (JSON Web Tokens)** (Authentication and authorization)
+
+---
+
+## 🚀 Key Features
+
+* **Data Dashboards:** Visualizations comparing rolling 7-day averages to historical data to detect behavioral improvements or warnings.
+* **Narrative Timeline:** A historical log of your daily activities summarized beautifully with status indicators.
+* **AI Insights:** Automated correlations between metrics (e.g., "Days with < 6 hours of sleep resulted in 40% less deep work").
+* **Admin Portal:** A dedicated portal for Administrators to monitor platform health, view global user statistics, and perform CRUD operations (Edit/Delete users).
+* **Global User Toggle:** Admins can effortlessly toggle their "Viewing User" to see the Dashboard, Timeline, and Insights exactly as any specific user sees them.
+* **Premium Aesthetics:** Fully responsive, highly polished user interface with fluid animations.
+
+---
+
+## 💻 Running Locally
 
 ### 1. Backend Setup
-1. Open a terminal in `chronis/backend`
-2. Create virtual env: `python -m venv venv`
-3. Activate virtual env:
-   - Windows: `.\venv\Scripts\activate`
-   - Mac/Linux: `source venv/bin/activate`
-4. Install dependencies: `pip install -r requirements.txt`
-5. Start server: `uvicorn main:app --reload`
-The backend will run at `http://localhost:8000`
+
+The backend runs on Python and uses SQLite by default for easy local development.
+
+1. Open a terminal and navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Create and activate a virtual environment:
+   ```bash
+   # Windows
+   python -m venv venv
+   .\venv\Scripts\activate
+
+   # Mac/Linux
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+3. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Start the FastAPI server:
+   ```bash
+   uvicorn main:app --reload
+   ```
+   *The API will be live at `http://localhost:8000`*
 
 ### 2. Frontend Setup
-1. Open another terminal in `chronis/frontend`
-2. Install dependencies: `npm install`
-3. Start dev server: `npm run dev`
-The frontend will run at `http://localhost:5173`
 
-### 3. Database Seeding
-To populate the database with mock data and demo users (U1-U5):
-1. In the `chronis` root folder, ensure the backend virtual environment is activated.
-2. Run: `python -m backend.seed`
-Demo user login: `user1@chronis.app` / password: `demo1234`
+1. Open a new terminal and navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install the dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   *The application will be live at `http://localhost:5173`*
 
-## Environment Variables
-- Backend `.env`: `DATABASE_URL` (Defaults to SQLite `sqlite:///./chronis.db`), `SECRET_KEY`, `FRONTEND_URL`
-- Frontend `.env`: `VITE_API_URL` (Defaults to `http://localhost:8000`)
+### 3. Database Seeding & Default Logins
 
-## Deploy Instructions (Render)
+We provide a script to automatically seed the database with synthetic behavioral data for testing.
 
-### PostgreSQL Database
-1. Create a PostgreSQL database on Render.
-2. Copy the "Internal Database URL" (if backend is on Render) or "External Database URL".
+1. In the `backend` folder with your virtual environment activated, run:
+   ```bash
+   python seed.py
+   ```
+2. **Default Accounts:**
+   * **Admin User:** `admin@chronis.app` / Password: `admin123`
+   * **Demo User:** `user2@chronis.app` / Password: `demo1234`
 
-### Web Service (Backend)
-1. Connect your GitHub repo.
-2. Root directory: `backend/`
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-5. Environment Variables:
-   - `DATABASE_URL`: Your Render Postgres URL (Make sure it starts with `postgresql://` instead of `postgres://`)
-   - `FRONTEND_URL`: Your deployed frontend URL
+---
 
-### Static Site (Frontend)
-1. Root directory: `frontend/`
-2. Build command: `npm install && npm run build`
-3. Publish directory: `dist/`
-4. Environment Variables:
-   - `VITE_API_URL`: Your deployed backend URL
+## 🌐 Deployment Guide
 
-### Seeding Prod Database
-In the Render shell for the backend service, run `python seed.py` (ensure imports in `seed.py` match production setup, which might require `python -m backend.seed`).
+This repository comes pre-configured for instant deployment on **Vercel** (Frontend) and **Render** (Backend).
+
+### Step 1: Deploy Backend to Render
+1. Push your code to GitHub.
+2. Go to [Render.com](https://render.com) and click **New -> Web Service**.
+3. Connect your GitHub repository.
+4. Render will automatically detect the `render.yaml` file in the root directory and configure the environment, build command, and start command for you!
+5. Once deployed, note your Render URL (e.g., `https://chronis-backend.onrender.com`).
+
+### Step 2: Deploy Frontend to Vercel
+1. Go to [Vercel.com](https://vercel.com) and click **Add New -> Project**.
+2. Import your GitHub repository.
+3. In the project settings, set the **Framework Preset** to `Vite` and the **Root Directory** to `frontend`.
+4. Add an Environment Variable:
+   - **Name:** `VITE_API_URL`
+   - **Value:** *Your Render Backend URL* (e.g., `https://chronis-backend.onrender.com`)
+5. Click **Deploy**. Vercel will automatically read the included `vercel.json` to handle React Router properly.
+6. Note your Vercel URL (e.g., `https://chronis.vercel.app`).
+
+### Step 3: Link Backend to Frontend
+1. Go back to your Render Dashboard for the backend service.
+2. Go to **Environment Variables**.
+3. Add a new variable:
+   - **Key:** `FRONTEND_URL`
+   - **Value:** *Your Vercel Frontend URL* (e.g., `https://chronis.vercel.app`)
+4. This ensures CORS policies correctly allow your Vercel app to talk to the Render API.
+
+---
+
+*Engineered by Antigravity.*

@@ -31,7 +31,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center px-4 py-12">
-      <div className="w-full max-w-md bg-card border border-white/5 p-8 rounded-2xl shadow-xl backdrop-blur-sm relative overflow-hidden">
+      <div className="w-full max-w-md glass-panel p-8 rounded-2xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
         
         <h2 className="text-3xl font-display font-bold mb-6 text-center">Join Chronis</h2>

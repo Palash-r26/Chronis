@@ -14,6 +14,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import About from './pages/About';
+import Developer from './pages/Developer';
 import AdminDashboard from './pages/AdminDashboard';
 import PageWrapper from './components/PageWrapper';
 import api from './api/axios';
@@ -21,10 +22,6 @@ import { useEffect } from 'react';
 
 function App() {
   const { user, loading } = useAuth();
-
-  if (loading) {
-    return <div className="min-h-screen bg-background flex items-center justify-center text-primary">Loading...</div>;
-  }
 
   useEffect(() => {
     if (user) {
@@ -40,19 +37,22 @@ function App() {
     }
   }, [user]);
 
+  if (loading) {
+    return <div className="min-h-screen bg-background flex items-center justify-center text-primary">Loading...</div>;
+  }
+
   return (
-    <div className="min-h-screen bg-background text-textPrimary flex flex-col font-body">
-      {user && <Navbar />}
-      <div className="flex flex-1 overflow-hidden">
-        {user && <Sidebar />}
-        <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <main className={`flex-1 overflow-y-auto ${user ? 'p-6' : ''}`}>
+    <div className="min-h-screen bg-background text-textPrimary flex font-body">
+      {user && <Sidebar />}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        <main className={`flex-1 ${user ? 'p-6 md:p-8' : ''}`}>
             <PageWrapper>
               <Routes>
                 <Route path="/" element={!user ? <Landing /> : (user.role === 'admin' ? <Navigate to="/admin" /> : <Navigate to="/dashboard" />)} />
                 <Route path="/login" element={!user ? <Login /> : (user.role === 'admin' ? <Navigate to="/admin" /> : <Navigate to="/dashboard" />)} />
                 <Route path="/register" element={!user ? <Register /> : (user.role === 'admin' ? <Navigate to="/admin" /> : <Navigate to="/dashboard" />)} />
                 <Route path="/about" element={<About />} />
+                <Route path="/developer" element={<Developer />} />
                 
                 <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -65,9 +65,7 @@ function App() {
               </Routes>
             </PageWrapper>
           </main>
-          {!user && <Footer />}
         </div>
-      </div>
     </div>
   );
 }

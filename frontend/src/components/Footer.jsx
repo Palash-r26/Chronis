@@ -1,17 +1,10 @@
-import { Link } from 'react-router-dom';
-
-const Footer = () => {
-  return (
-    <footer className="border-t border-white/5 py-8 mt-12">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-textSecondary text-sm">
-        <p>&copy; {new Date().getFullYear()} Chronis. All rights reserved.</p>
-        <div className="flex space-x-6">
-          <Link to="/about" className="hover:text-primary transition-colors">About</Link>
-          <a href="https://github.com/chronis" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">GitHub</a>
-        </div>
-      </div>
-    </footer>
-  );
-};
+const Footer = () => (
+  <footer className="w-full glass-panel !border-b-0 !border-x-0 !shadow-none py-8 mt-auto z-10 relative">
+    <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center text-sm text-textSecondary gap-4 text-center md:text-left">
+      <p className="font-medium">&copy; 2026 Chronis. All rights reserved.</p>
+      <p className="font-medium">Engineered by Antigravity for Chronis.</p>
+    </div>
+  </footer>
+);
 
 export default Footer;

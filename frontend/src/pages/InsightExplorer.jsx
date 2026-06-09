@@ -2,25 +2,28 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import InsightCard from '../components/InsightCard';
-import UserSelector from '../components/UserSelector';
+import { Filter } from 'lucide-react';
+import { motion } from 'framer-motion';
+import AdminUserSelector from '../components/AdminUserSelector';
 
 const InsightExplorer = () => {
-  const { user } = useAuth();
-  const [selectedUser, setSelectedUser] = useState(user?.linked_user_id || 'U1');
+  const { user, globalUserView } = useAuth();
+  const selectedUser = globalUserView || user?.linked_user_id || 'U1';
   const [insights, setInsights] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('All');
-
-  const categories = ['All', 'Sleep', 'Productivity', 'Activity', 'Screen'];
 
   useEffect(() => {
     const fetchInsights = async () => {
       setLoading(true);
       try {
+        setError(null);
         const response = await api.get(`/api/insights/${selectedUser}`);
-        setInsights(response.data);
+        setInsights(response.data.insights || []);
       } catch (error) {
         console.error("Failed to fetch insights", error);
+        setError(error.response?.data?.detail || "Failed to load insights");
       } finally {
         setLoading(false);
       }
@@ -28,18 +31,17 @@ const InsightExplorer = () => {
     fetchInsights();
   }, [selectedUser]);
 
-  const filteredInsights = filter === 'All' 
-    ? insights 
-    : insights.filter(i => i.category === filter);
+  const categories = ['All', ...new Set(insights.map(i => i.category))];
+  const filteredInsights = filter === 'All' ? insights : insights.filter(i => i.category === filter);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-display font-bold">What your data says</h2>
-          <p className="text-textSecondary mt-1">Auto-generated behavioral correlations and patterns.</p>
+          <h2 className="text-3xl font-display font-bold">AI Insights</h2>
+          <p className="text-textSecondary mt-1">AI-generated correlations and actionable advice.</p>
         </div>
-        <UserSelector selectedUser={selectedUser} onSelectUser={setSelectedUser} />
+        <AdminUserSelector />
       </div>
 
       <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -47,10 +49,10 @@ const InsightExplorer = () => {
           <button
             key={cat}
             onClick={() => setFilter(cat)}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
               filter === cat 
-                ? 'bg-primary text-white' 
-                : 'bg-surface text-textSecondary hover:bg-white/10 hover:text-textPrimary'
+                ? 'bg-primary text-white shadow-lg shadow-primary/30 transform scale-105 border border-primary/50' 
+                : 'glass-panel text-textSecondary hover:bg-white/10 hover:text-textPrimary border border-white/5'
             }`}
           >
             {cat}
@@ -60,10 +62,14 @@ const InsightExplorer = () => {
 
       {loading ? (
         <div className="flex justify-center py-12 text-primary">Loading insights...</div>
+      ) : error ? (
+        <div className="glass-panel p-8 rounded-2xl text-center text-warning">
+          <p className="text-xl font-medium">{error}</p>
+        </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredInsights.map(insight => (
-            <InsightCard key={insight.id} insight={insight} />
+          {filteredInsights.map((insight, index) => (
+            <InsightCard key={insight.id} insight={insight} index={index} />
           ))}
         </div>
       )}

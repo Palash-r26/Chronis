@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
-import { User, Mail, Calendar, ShieldCheck } from 'lucide-react';
+import { User, Mail, Calendar, ShieldCheck, Upload } from 'lucide-react';
 
 const Profile = () => {
   const { user, setUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ 
-    name: user?.name || '', 
-    profile_photo_url: user?.profile_photo_url || '' 
+    name: user?.name || '',
+    profile_photo_url: user?.profile_photo_url || ''
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -33,6 +33,38 @@ const Profile = () => {
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   };
 
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_SIZE = 256;
+          let { width, height } = img;
+          
+          if (width > height && width > MAX_SIZE) {
+            height = Math.round(height * (MAX_SIZE / width));
+            width = MAX_SIZE;
+          } else if (height > MAX_SIZE) {
+            width = Math.round(width * (MAX_SIZE / height));
+            height = MAX_SIZE;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          setFormData({ ...formData, profile_photo_url: canvas.toDataURL('image/jpeg', 0.8) });
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const joinedDate = user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', {
     month: 'long', year: 'numeric'
   }) : 'Recently';
@@ -43,15 +75,24 @@ const Profile = () => {
 
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
-          <div className="bg-card border border-white/5 rounded-2xl p-8 flex flex-col items-center text-center">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-secondary p-1 mb-6 shadow-lg shadow-primary/20 overflow-hidden relative group">
-              {user?.profile_photo_url ? (
-                <img src={user.profile_photo_url} alt="Profile" className="w-full h-full rounded-full object-cover bg-surface" />
-              ) : (
-                <div className="w-full h-full rounded-full bg-surface flex items-center justify-center text-4xl font-display font-bold text-white">
-                  {getInitials(user?.name)}
-                </div>
-              )}
+          <div className="glass-panel rounded-2xl p-8 flex flex-col items-center text-center">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-secondary p-1 mb-6 shadow-lg shadow-primary/20 relative group mx-auto">
+              <div className="w-full h-full rounded-full overflow-hidden relative">
+                {formData.profile_photo_url || user?.profile_photo_url ? (
+                  <img src={formData.profile_photo_url || user?.profile_photo_url} alt="Profile" className="w-full h-full object-cover bg-surface" />
+                ) : (
+                  <div className="w-full h-full bg-surface flex items-center justify-center text-4xl font-display font-bold text-white">
+                    {getInitials(formData.name || user?.name)}
+                  </div>
+                )}
+                {isEditing && (
+                  <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-white">
+                    <Upload size={24} className="mb-1" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Upload</span>
+                    <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+                  </label>
+                )}
+              </div>
             </div>
             
             <h3 className="text-2xl font-bold font-display">{user?.name}</h3>
@@ -71,7 +112,7 @@ const Profile = () => {
         </div>
 
         <div className="md:col-span-2">
-          <div className="bg-card border border-white/5 rounded-2xl p-8">
+          <div className="glass-panel rounded-2xl p-8">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-xl font-display font-bold">Personal Information</h3>
               <button 
@@ -98,21 +139,6 @@ const Profile = () => {
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     disabled={!isEditing}
-                    className="w-full bg-surface border border-white/10 rounded-xl pl-12 pr-4 py-3 text-textPrimary focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-textSecondary text-sm mb-2">Profile Photo URL</label>
-                <div className="relative">
-                  <User size={20} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-textSecondary" />
-                  <input
-                    type="url"
-                    value={formData.profile_photo_url}
-                    onChange={(e) => setFormData({...formData, profile_photo_url: e.target.value})}
-                    disabled={!isEditing}
-                    placeholder="https://example.com/photo.jpg"
                     className="w-full bg-surface border border-white/10 rounded-xl pl-12 pr-4 py-3 text-textPrimary focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
                   />
                 </div>

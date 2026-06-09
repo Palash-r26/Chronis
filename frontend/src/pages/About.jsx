@@ -13,7 +13,7 @@ const About = () => {
           <p className="text-xl text-textSecondary">Your personal behavioral analytics dashboard.</p>
         </motion.div>
         
-        <div className="bg-card border border-white/5 p-8 rounded-2xl shadow-xl space-y-6 text-left">
+        <div className="glass-panel p-8 rounded-2xl shadow-xl space-y-6 text-left">
           <p className="text-textPrimary leading-relaxed">
             Chronis is built to help you track, analyze, and optimize your daily habits. 
             By monitoring steps, sleep, screen time, and deep work sessions, it empowers 

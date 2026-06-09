@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routes import auth, dashboard, insights, timeline, settings, users
+from routes import auth, dashboard, insights, timeline, settings, users, admin
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -13,7 +13,10 @@ app = FastAPI(title="Chronis API")
 
 # Configure CORS
 origins = [
-    os.getenv("FRONTEND_URL", "http://localhost:5173"), # default vite port
+    os.getenv("FRONTEND_URL", "http://localhost:5173"),
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
 ]
 
 app.add_middleware(
@@ -31,7 +34,12 @@ app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"]
 app.include_router(insights.router, prefix="/api/insights", tags=["insights"])
 app.include_router(timeline.router, prefix="/api/timeline", tags=["timeline"])
 app.include_router(settings.router, prefix="/api/settings", tags=["settings"])
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Chronis API"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

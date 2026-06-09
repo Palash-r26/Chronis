@@ -3,6 +3,15 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { Moon, Bell, Database, Ruler, Trash2 } from 'lucide-react';
 
+const Toggle = ({ enabled, onChange }) => (
+  <button
+    onClick={() => onChange(!enabled)}
+    className={`w-12 h-6 rounded-full transition-colors relative ${enabled ? 'bg-primary' : 'bg-surface border border-white/20'}`}
+  >
+    <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${enabled ? 'transform translate-x-6' : ''}`} />
+  </button>
+);
+
 const Settings = () => {
   const { user, setUser } = useAuth();
   const [settings, setSettings] = useState(null);
@@ -29,25 +38,12 @@ const Settings = () => {
       await api.put(`/api/settings/${user.id}`, { [key]: value });
       setMessage('Settings updated successfully');
       setTimeout(() => setMessage(''), 3000);
-      
-      // If default_data_user is updated, we also update the user context since linked_user_id changes
-      if (key === 'default_data_user') {
-        const userRes = await api.get('/api/users/me');
-        setUser(userRes.data);
-      }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const Toggle = ({ enabled, onChange }) => (
-    <button
-      onClick={() => onChange(!enabled)}
-      className={`w-12 h-6 rounded-full transition-colors relative ${enabled ? 'bg-primary' : 'bg-surface border border-white/20'}`}
-    >
-      <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${enabled ? 'transform translate-x-6' : ''}`} />
-    </button>
-  );
+
 
   if (loading) return <div className="flex justify-center p-12 text-primary">Loading...</div>;
 
@@ -61,20 +57,8 @@ const Settings = () => {
         </div>
       )}
 
-      <div className="bg-card border border-white/5 rounded-2xl overflow-hidden divide-y divide-white/5">
+      <div className="glass-panel rounded-2xl overflow-hidden divide-y divide-white/5">
         
-        {/* Appearance */}
-        <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-start space-x-4">
-            <div className="p-3 bg-surface rounded-xl text-primary"><Moon size={24} /></div>
-            <div>
-              <h3 className="text-lg font-bold font-display">Dark Mode</h3>
-              <p className="text-textSecondary text-sm">Toggle dark mode appearance (currently locked to dark theme).</p>
-            </div>
-          </div>
-          <Toggle enabled={settings?.dark_mode} onChange={(val) => updateSetting('dark_mode', val)} />
-        </div>
-
         {/* Notifications */}
         <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start space-x-4">
@@ -97,26 +81,6 @@ const Settings = () => {
             </div>
           </div>
           <Toggle enabled={settings?.steps_in_k} onChange={(val) => updateSetting('steps_in_k', val)} />
-        </div>
-
-        {/* Data Source */}
-        <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-start space-x-4">
-            <div className="p-3 bg-surface rounded-xl text-[#FF9F43]"><Database size={24} /></div>
-            <div>
-              <h3 className="text-lg font-bold font-display">Default Data Profile</h3>
-              <p className="text-textSecondary text-sm">Which user profile's data to display by default.</p>
-            </div>
-          </div>
-          <select 
-            value={settings?.default_data_user}
-            onChange={(e) => updateSetting('default_data_user', e.target.value)}
-            className="bg-surface border border-white/10 rounded-xl px-4 py-3 text-textPrimary focus:outline-none focus:border-primary"
-          >
-            {['U1', 'U2', 'U3', 'U4', 'U5'].map(u => (
-              <option key={u} value={u}>User Profile {u}</option>
-            ))}
-          </select>
         </div>
 
         {/* Danger Zone */}

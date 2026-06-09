@@ -1,5 +1,22 @@
 import { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-surface border border-white/10 p-4 rounded-xl shadow-xl backdrop-blur-md">
+        <p className="text-textSecondary mb-2 font-medium">{label}</p>
+        {payload.map((entry, index) => (
+          <div key={`item-${index}`} className="flex items-center space-x-2 text-sm">
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+            <span className="text-textPrimary">{entry.name}: {entry.value}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 const TrendChart = ({ data }) => {
   const [activeMetrics, setActiveMetrics] = useState({
@@ -22,22 +39,7 @@ const TrendChart = ({ data }) => {
     setActiveMetrics(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-surface border border-white/10 p-4 rounded-xl shadow-xl backdrop-blur-md">
-          <p className="text-textSecondary mb-2 font-medium">{label}</p>
-          {payload.map((entry, index) => (
-            <div key={`item-${index}`} className="flex items-center space-x-2 text-sm">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-textPrimary">{entry.name}: {entry.value}</span>
-            </div>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
+
 
   return (
     <div className="bg-card border border-white/5 p-6 rounded-2xl w-full h-[400px] flex flex-col">

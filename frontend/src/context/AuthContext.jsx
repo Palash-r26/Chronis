@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 
@@ -52,8 +53,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const [globalUserView, setGlobalUserView] = useState(null);
+
   return (
-    <AuthContext.Provider value={{ user, setUser, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, login, register, logout, loading, globalUserView, setGlobalUserView }}>
       {children}
     </AuthContext.Provider>
   );
