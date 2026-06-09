@@ -132,4 +132,4 @@ This repository comes pre-configured for instant deployment on **Vercel** (Front
 
 ---
 
-*Engineered by Antigravity.*
+*Engineered by Palash Rai.*

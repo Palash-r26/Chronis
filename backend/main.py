@@ -13,7 +13,9 @@ app = FastAPI(title="Chronis API")
 
 # Configure CORS
 origins = [
-    os.getenv("FRONTEND_URL", "http://localhost:5173"),
+    os.getenv("FRONTEND_URL", "https://chronis-palash.vercel.app"),
+    "https://chronis-palash.vercel.app",
+    "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
