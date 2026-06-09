@@ -4,6 +4,11 @@ Chronis is a modern, full-stack behavioral analytics web application. It empower
 
 It features a stunning dark-mode optimized glassmorphism UI, interactive charts, AI-driven insights, and a comprehensive **Admin Portal** for user management.
 
+### 🌟 Live Demo
+- **Frontend (Vercel):** [https://chronis-palash.vercel.app](https://chronis-palash.vercel.app/)
+- **Backend API (Render):** [https://chronis.onrender.com](https://chronis.onrender.com)
+*(Note: Initial backend requests may take 30-50s to wake up the Render free tier server)*
+
 ---
 
 ## 🛠 Tech Stack
