@@ -11,6 +11,17 @@ It features a stunning dark-mode optimized glassmorphism UI, interactive charts,
 
 ---
 
+### 📸 Application Previews
+
+| | |
+|:---:|:---:|
+| ![View 1](frontend/public/app-1.png)<br><b>Dashboard & Insights</b> | ![View 2](frontend/public/app-2.png)<br><b>Timeline & History</b> |
+| ![View 3](frontend/public/app-3.png)<br><b>AI Correlation Engine</b> | ![View 4](frontend/public/app-4.png)<br><b>Admin Control Panel</b> |
+| ![View 5](frontend/public/app-5.png)<br><b>User Management</b> | ![View 6](frontend/public/app-6.png)<br><b>Settings & Preferences</b> |
+| ![View 7](frontend/public/app-7.png)<br><b>Dark Mode UI</b> | |
+
+---
+
 ## 🛠 Tech Stack
 
 **Frontend Architecture:**
