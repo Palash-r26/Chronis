@@ -108,7 +108,7 @@ We provide a script to automatically seed the database with synthetic behavioral
    ```
 2. **Default Accounts:**
    * **Admin User:** `admin@chronis.app` / Password: `admin123`
-   * **Demo User:** `user2@chronis.app` / Password: `demo1234`
+   * **Demo User:** `user1@chronis.app` / Password: `demo1234`
 
 ---
 
