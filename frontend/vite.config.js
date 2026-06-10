@@ -7,9 +7,15 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom', 'axios'],
-          ui: ['framer-motion', 'lucide-react', 'recharts']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (['react', 'react-dom', 'react-router-dom', 'axios'].some(pkg => id.includes(`node_modules/${pkg}`))) {
+              return 'vendor';
+            }
+            if (['framer-motion', 'lucide-react', 'recharts'].some(pkg => id.includes(`node_modules/${pkg}`))) {
+              return 'ui';
+            }
+          }
         }
       }
     }
