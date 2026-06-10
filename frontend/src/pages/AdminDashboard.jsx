@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 
+
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState([]);
@@ -25,7 +27,14 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await api.get('/api/admin/users');
-      setUsers(response.data);
+      const sortedUsers = response.data.sort((a, b) => {
+        if (a.role === 'admin' && b.role !== 'admin') return 1;
+        if (a.role !== 'admin' && b.role === 'admin') return -1;
+        const aId = a.linked_user_id ? parseInt(a.linked_user_id.replace('U', '')) || a.id : a.id;
+        const bId = b.linked_user_id ? parseInt(b.linked_user_id.replace('U', '')) || b.id : b.id;
+        return aId - bId;
+      });
+      setUsers(sortedUsers);
     } catch (err) {
       toast.error('Failed to fetch users');
     } finally {
@@ -140,7 +149,7 @@ const AdminDashboard = () => {
             className="glass-panel rounded-3xl overflow-hidden"
           >
             <div className="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
-              <h3 className="text-xl font-bold font-display">All Users Directory</h3>
+              <h3 className="text-xl font-bold font-display">All Users Directory ({users.length} users)</h3>
               <div className="relative">
                 <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textSecondary" />
                 <input 

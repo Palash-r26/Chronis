@@ -29,6 +29,7 @@ const Login = () => {
   
   // Traditional Credentials States
   const [email, setEmail] = useState('');
+  const [loginError, setLoginError] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
@@ -36,6 +37,16 @@ const Login = () => {
   // Visibility States
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Demo user selection state
+  const [demoUser, setDemoUser] = useState('');
+  const demoUsers = {
+    'User 1': { email: 'user1@chronis.app', password: 'demo1234' },
+    'User 2': { email: 'user2@chronis.app', password: 'demo1234' },
+    'User 3': { email: 'user3@chronis.app', password: 'demo1234' },
+    'User 4': { email: 'user4@chronis.app', password: 'demo1234' },
+    'User 5': { email: 'user5@chronis.app', password: 'demo1234' },
+    'Admin': { email: 'admin@chronis.app', password: 'admin123' },
+  };
   
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState('dark'); // Default to dark mode
@@ -74,6 +85,16 @@ const Login = () => {
     };
   }, []);
 
+  // Populate email/password when demo user selected
+  useEffect(() => {
+    if (demoUser && demoUsers[demoUser]) {
+      setEmail(demoUsers[demoUser].email);
+      setPassword(demoUsers[demoUser].password);
+    }
+  }, [demoUser]);
+
+
+
   // Load Google Identity Services script on mount for real Chrome account picking
   useEffect(() => {
     const script = document.createElement('script');
@@ -104,14 +125,15 @@ const Login = () => {
   // Traditional Email/Password Form Submit
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
+    setLoginError('');
     if (!email || !password || (authMode === 'signup' && (!name || !confirmPassword))) {
-      toast.error('Please fill in all required fields');
+      setLoginError('Please fill in all required fields');
       return;
     }
     
     // Sign-up Password matching check
     if (authMode === 'signup' && password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      setLoginError('Passwords do not match');
       return;
     }
     
@@ -129,9 +151,9 @@ const Login = () => {
       }
     } catch (err) {
       if (err.response && (err.response.status === 401 || err.response.status === 400 || err.response.status === 404)) {
-        toast.error('Invalid email or password');
+        setLoginError('Invalid email or password');
       } else {
-        toast.error(err.response?.data?.detail || 'Authentication failed. Please try again.');
+        setLoginError(err.response?.data?.detail || 'Authentication failed. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -147,9 +169,9 @@ const Login = () => {
         {/* ─── NAVBAR ─── */}
         <nav className="fixed top-0 w-full z-50 transition-all duration-300 bg-white/80 dark:bg-[#131B2E]/85 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800/60 py-3">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
-            <Link to="/" className="group cursor-pointer transition-transform duration-200 hover:scale-105">
+            <a href="/" className="group cursor-pointer transition-transform duration-200 hover:scale-105">
               <Logo className="w-10 h-10 shrink-0" withText={true} />
-            </Link>
+            </a>
             
             <div className="hidden md:flex items-center gap-8">
               <Link to="/#about" className="text-sm font-bold text-slate-500 hover:text-[#7c3aed] transition-colors">About</Link>
@@ -199,8 +221,8 @@ const Login = () => {
               />
               <PillarCard 
                 icon={<Zap className="text-amber-500" size={20} />}
-                title="Micro-Regeneration" 
-                desc="Swap individual questions instantly without rebuilding papers." 
+                title="Actionable Insights" 
+                desc="Discover hidden correlations to optimize your daily routines." 
               />
               <PillarCard 
                 icon={<Compass className="text-blue-500" size={20} />}
@@ -259,6 +281,25 @@ const Login = () => {
 
               {/* Traditional Email & Password Form */}
               <form onSubmit={handleAuthSubmit} className="w-full space-y-4">
+                {loginError && (<p className="text-xs text-red-500 font-bold mb-2 text-center">{loginError}</p>)}
+                {/* Demo User selector */}
+                {authMode === 'signin' && (
+                  <div className="mb-4">
+                    <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Demo User</label>
+                    <select
+                      value={demoUser}
+                      onChange={(e) => setDemoUser(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-2xl pl-3 pr-3 py-2.5 text-xs focus:outline-none focus:border-[#7c3aed] text-slate-900 dark:text-white"
+                    >
+                      <option value="">Select a demo user</option>
+                      {Object.keys(demoUsers).map((key) => (
+                        <option key={key} value={key}>
+                          {key}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 
                 {authMode === 'signup' && (
                   <div className="space-y-1.5">
@@ -283,7 +324,7 @@ const Login = () => {
                     <Mail className="absolute left-4 top-3.5 text-slate-400" size={16} />
                     <input 
                       type="email" 
-                      placeholder="you@chronis.edu"
+                      placeholder="user1@chronis.app"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       className="w-full bg-slate-50 dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-3.5 text-xs focus:outline-none focus:border-[#7c3aed] font-bold transition-all text-slate-900 dark:text-white placeholder-slate-400"
@@ -376,7 +417,7 @@ const Login = () => {
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-12">
             
             {/* Branding Column */}
-            <div className="md:col-span-5 space-y-6">
+            <div className="md:col-span-5 space-y-6 flex flex-col items-center text-center md:items-start md:text-left">
               <Link to="/" className="inline-flex">
                 <Logo className="w-8 h-8 shrink-0" withText={true} />
               </Link>
@@ -390,7 +431,7 @@ const Login = () => {
             </div>
 
             {/* Links Column 1 */}
-            <div className="md:col-span-3 space-y-4">
+            <div className="md:col-span-3 space-y-4 text-center md:text-left">
               <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Platform</h4>
               <ul className="space-y-3">
                 <li><Link to="/#about" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#7c3aed] transition-colors">About Chronis</Link></li>
@@ -400,7 +441,7 @@ const Login = () => {
             </div>
 
             {/* Links Column 2 */}
-            <div className="md:col-span-4 space-y-4">
+            <div className="md:col-span-4 space-y-4 text-center md:text-left">
               <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Developer</h4>
               <ul className="space-y-3">
                 <li><Link to="/developer" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#7c3aed] transition-colors">Palash Rai - Developer Profile</Link></li>
@@ -415,13 +456,13 @@ const Login = () => {
               <span>&copy; {new Date().getFullYear()} Chronis. All rights reserved.</span>
               <span className="hidden md:inline">|</span>
               <span className="flex items-center gap-1.5">
-                Solely Developed by <span className="text-[#7c3aed]">Palash Rai</span>
+                Solely Developed by <Link to="/developer" className="text-[#7c3aed] hover:underline cursor-pointer transition-colors">Palash Rai</Link>
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <span>Built with</span>
               <Heart size={12} className="text-red-500 animate-pulse fill-red-500" />
-              <span>by Palash Rai</span>
+              <span>by <Link to="/developer" className="hover:text-[#7c3aed] hover:underline cursor-pointer transition-colors">Palash Rai</Link></span>
             </div>
           </div>
         </footer>

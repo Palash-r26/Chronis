@@ -92,9 +92,9 @@ const Landing = () => {
         {/* ─── NAVBAR ─── */}
         <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-[#131B2E]/85 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800/60 py-3' : 'bg-transparent py-6'}`}>
           <div className="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
-            <Link to="/" className="group cursor-pointer transition-transform duration-200 hover:scale-105">
+            <a href="/" className="group cursor-pointer transition-transform duration-200 hover:scale-105">
               <Logo className="w-10 h-10 shrink-0" withText={true} />
-            </Link>
+            </a>
             
             <div className="hidden md:flex items-center gap-8">
               <a href="#about" className="text-sm font-bold text-slate-500 hover:text-[#7c3aed] transition-colors">About</a>
@@ -113,9 +113,9 @@ const Landing = () => {
               <Link to="/login" className="hidden sm:block text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-[#7c3aed] dark:hover:text-[#7c3aed] transition-colors px-4 py-2">
                 Sign In
               </Link>
-              <Link to="/login" className="px-6 py-2.5 bg-[#7c3aed] hover:bg-[#6d28d9] text-white rounded-full font-bold text-sm transition-all shadow-lg shadow-violet-500/20 hover:scale-105 active:scale-95 flex items-center gap-2">
+              <Link to="/login" className="px-4 py-2 md:px-6 md:py-2.5 bg-[#7c3aed] hover:bg-[#6d28d9] text-white rounded-full font-bold text-xs md:text-sm transition-all shadow-lg shadow-violet-500/20 hover:scale-105 active:scale-95 flex items-center gap-1.5 md:gap-2">
                 Get Started
-                <ArrowRight size={14} />
+                <ArrowRight size={14} className="md:w-4 md:h-4 w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
@@ -181,11 +181,10 @@ const Landing = () => {
                 What is Chronis?
               </h2>
               <p className="text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto text-sm md:text-base">
-                Chronis is a cutting-edge telemetry dashboard engineered by Palash Rai to synthesize your raw daily data—sleep, screen time, exercise—into actionable, AI-driven insights. 
+                Chronis is a cutting-edge telemetry dashboard engineered by Palash Rai to synthesize your raw daily data-sleep, screen time, exercise-into actionable, AI-driven insights. 
               </p>
             </div>
-            <div className="grid md:grid-cols-3 gap-6 w-full relative">
-              <motion.div style={{ y: y2 }} className="absolute -inset-4 bg-gradient-to-b from-transparent via-[#7c3aed]/5 to-transparent blur-2xl -z-10" />
+            <div className="grid md:grid-cols-3 gap-8 w-full relative">
               
               <FeatureCard 
                 icon={Activity}
@@ -278,7 +277,7 @@ const Landing = () => {
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-12">
             
             {/* Branding Column */}
-            <div className="md:col-span-5 space-y-6">
+            <div className="md:col-span-5 space-y-6 flex flex-col items-center text-center md:items-start md:text-left">
               <Link to="/" className="inline-flex">
                 <Logo className="w-8 h-8 shrink-0" withText={true} />
               </Link>
@@ -292,7 +291,7 @@ const Landing = () => {
             </div>
 
             {/* Links Column 1 */}
-            <div className="md:col-span-3 space-y-4">
+            <div className="md:col-span-3 space-y-4 text-center md:text-left">
               <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Platform</h4>
               <ul className="space-y-3">
                 <li><a href="#about" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#7c3aed] transition-colors">About Chronis</a></li>
@@ -302,7 +301,7 @@ const Landing = () => {
             </div>
 
             {/* Links Column 2 */}
-            <div className="md:col-span-4 space-y-4">
+            <div className="md:col-span-4 space-y-4 text-center md:text-left">
               <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Developer</h4>
               <ul className="space-y-3">
                 <li><Link to="/developer" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-[#7c3aed] transition-colors">Palash Rai - Developer Profile</Link></li>
@@ -317,13 +316,13 @@ const Landing = () => {
               <span>&copy; {new Date().getFullYear()} Chronis. All rights reserved.</span>
               <span className="hidden md:inline">|</span>
               <span className="flex items-center gap-1.5">
-                Solely Developed by <span className="text-[#7c3aed]">Palash Rai</span>
+                Solely Developed by <Link to="/developer" className="text-[#7c3aed] hover:underline cursor-pointer transition-colors">Palash Rai</Link>
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <span>Built with</span>
               <Heart size={12} className="text-red-500 animate-pulse fill-red-500" />
-              <span>by Palash Rai</span>
+              <span>by <Link to="/developer" className="hover:text-[#7c3aed] hover:underline cursor-pointer transition-colors">Palash Rai</Link></span>
             </div>
           </div>
         </footer>

@@ -63,7 +63,9 @@ const Sidebar = () => {
       <div className="h-20 w-full flex items-center px-4 overflow-hidden whitespace-nowrap border-b border-white/5 shrink-0">
         {isCollapsed ? (
           <div className="flex w-full items-center justify-center gap-1.5">
-            <Logo className="w-7 h-7 shrink-0" withText={false} />
+            <a href="/dashboard">
+              <Logo className="w-7 h-7 shrink-0" withText={false} />
+            </a>
             <button 
               onClick={() => setIsCollapsed(false)}
               className="p-1 rounded-md text-textSecondary hover:bg-white/10 hover:text-primary transition-colors"
@@ -74,7 +76,9 @@ const Sidebar = () => {
           </div>
         ) : (
           <div className="flex w-full items-center justify-between">
-            <Logo className="w-8 h-8 shrink-0" withText={true} />
+            <a href="/dashboard" className="flex items-center gap-3">
+              <Logo className="w-8 h-8 shrink-0" withText={true} />
+            </a>
             <button 
               onClick={() => setIsCollapsed(true)}
               className="p-1.5 rounded-lg text-textSecondary hover:bg-white/10 hover:text-primary transition-colors"

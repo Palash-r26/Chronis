@@ -19,6 +19,11 @@ export default function DeveloperPage() {
   const [theme, setTheme] = useState('dark');
   const [imageError, setImageError] = useState(false);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Load and apply theme (defaults to dark mode)
   useEffect(() => {
     const savedTheme = localStorage.getItem('chronis-theme') || 'dark';

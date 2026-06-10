@@ -8,7 +8,8 @@ import AdminUserSelector from '../components/AdminUserSelector';
 
 const InsightExplorer = () => {
   const { user, globalUserView } = useAuth();
-  const selectedUser = globalUserView || user?.linked_user_id || 'U1';
+  const selectedUser = globalUserView || user?.linked_user_id || user?.id || 'U1';
+
   const [insights, setInsights] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,7 +21,8 @@ const InsightExplorer = () => {
       try {
         setError(null);
         const response = await api.get(`/api/insights/${selectedUser}`);
-        setInsights(response.data.insights || []);
+        setInsights(response.data || []);
+
       } catch (error) {
         console.error("Failed to fetch insights", error);
         setError(error.response?.data?.detail || "Failed to load insights");
@@ -68,9 +70,13 @@ const InsightExplorer = () => {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredInsights.map((insight, index) => (
-            <InsightCard key={insight.id} insight={insight} index={index} />
-          ))}
+                    {filteredInsights.length === 0 ? (
+            <div className="text-center text-textSecondary py-12">No insights available for this profile.</div>
+          ) : (
+            filteredInsights.map((insight, index) => (
+              <InsightCard key={insight.id} insight={insight} index={index} />
+            ))
+          )}
         </div>
       )}
     </div>

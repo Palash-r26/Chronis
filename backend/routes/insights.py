@@ -11,9 +11,31 @@ def get_insights(user_id: str, db: Session = Depends(get_db), current_user: User
     if current_user.role != "admin" and user_id != current_user.linked_user_id:
         raise HTTPException(status_code=403, detail="Not authorized to view this data profile")
 
+    # Try fetching from DB first
     data = db.query(BehavioralData).filter(BehavioralData.user_id == user_id).all()
+    # If DB has no data, fall back to CSV file
     if not data:
-        raise HTTPException(status_code=404, detail="No data found for user")
+        import csv, os
+        csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'Chronis_TaskA_Synthetic_Behavioral_Data_v2-2.csv')
+        if os.path.exists(csv_path):
+            with open(csv_path, newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    if row['user_id'] == user_id:
+                        # Convert fields to appropriate types
+                        data.append(type('Row', (object,), {
+                            'user_id': row['user_id'],
+                            'date': row['date'],
+                            'steps': int(row['steps'] or 0),
+                            'sleep_hours': float(row['sleep_hours'] or 0),
+                            'screen_time_hours': float(row['screen_time_hours'] or 0),
+                            'deep_work_hours': float(row['deep_work_hours'] or 0),
+                            'exercise_minutes': int(row['exercise_minutes'] or 0)
+                        })())
+        # If still empty, return empty list
+        if not data:
+            return []
+
 
     insights = []
     

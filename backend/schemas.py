@@ -11,7 +11,7 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: str
-    linked_user_id: str
+    linked_user_id: Optional[str] = None
     role: str
     profile_photo_url: Optional[str] = None
     created_at: datetime
