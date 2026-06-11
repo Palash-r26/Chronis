@@ -85,7 +85,8 @@ const Sidebar = () => {
         initial={false}
         animate={{ width: isCollapsed ? 80 : 256 }} 
         className={clsx(
-          "glass-panel flex flex-col shrink-0 z-50 rounded-none border-y-0 border-l-0",
+          "glass-panel !bg-white/95 dark:!bg-[#131B2E]/95 md:!bg-black/5 md:dark:!bg-white/5",
+          "flex flex-col shrink-0 z-50 rounded-none border-y-0 border-l-0",
           "fixed md:sticky top-0 left-0 h-[100dvh]",
           "transition-transform duration-300 ease-in-out md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
