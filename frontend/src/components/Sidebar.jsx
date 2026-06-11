@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Lightbulb, CalendarDays, User, Settings, LogOut, ChevronRight, ChevronLeft, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Lightbulb, CalendarDays, User, Settings, LogOut, ChevronRight, ChevronLeft, Sun, Moon, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import clsx from 'clsx';
 import Logo from './Logo';
@@ -10,6 +10,7 @@ const Sidebar = () => {
   const location = useLocation();
   const { logout, user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
@@ -53,42 +54,78 @@ const Sidebar = () => {
   }
 
   return (
-    <motion.div 
-      initial={false}
-      animate={{ width: isCollapsed ? 80 : 256 }} 
-      className="glass-panel hidden md:flex flex-col relative shrink-0 z-40 rounded-none border-y-0 border-l-0"
-    >
-
-
-      <div className="h-20 w-full flex items-center px-4 overflow-hidden whitespace-nowrap border-b border-white/5 shrink-0">
-        {isCollapsed ? (
-          <div className="flex w-full items-center justify-center gap-1.5">
-            <a href="/dashboard">
-              <Logo className="w-7 h-7 shrink-0" withText={false} />
-            </a>
-            <button 
-              onClick={() => setIsCollapsed(false)}
-              className="p-1 rounded-md text-textSecondary hover:bg-white/10 hover:text-primary transition-colors"
-              title="Expand Sidebar"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        ) : (
-          <div className="flex w-full items-center justify-between">
-            <a href="/dashboard" className="flex items-center gap-3">
-              <Logo className="w-8 h-8 shrink-0" withText={true} />
-            </a>
-            <button 
-              onClick={() => setIsCollapsed(true)}
-              className="p-1.5 rounded-lg text-textSecondary hover:bg-white/10 hover:text-primary transition-colors"
-              title="Collapse Sidebar"
-            >
-              <ChevronLeft size={20} />
-            </button>
-          </div>
-        )}
+    <>
+      {/* Mobile Top Header */}
+      <div className="md:hidden flex items-center justify-between p-4 glass-panel !border-x-0 !border-t-0 !rounded-none z-30 sticky top-0 w-full">
+        <a href="/dashboard" className="flex items-center gap-3">
+          <Logo className="w-8 h-8 shrink-0" withText={true} />
+        </a>
+        <button 
+          onClick={() => setIsMobileOpen(true)} 
+          className="p-2 rounded-lg text-textSecondary hover:bg-white/10 hover:text-primary transition-colors"
+        >
+          <Menu size={24} />
+        </button>
       </div>
+
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {isMobileOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+            onClick={() => setIsMobileOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.div 
+        initial={false}
+        animate={{ width: isCollapsed ? 80 : 256 }} 
+        className={clsx(
+          "glass-panel flex flex-col shrink-0 z-50 rounded-none border-y-0 border-l-0",
+          "fixed md:sticky top-0 left-0 h-[100dvh]",
+          "transition-transform duration-300 ease-in-out md:translate-x-0",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="h-20 w-full flex items-center px-4 overflow-hidden whitespace-nowrap border-b border-black/5 dark:border-white/5 shrink-0">
+          {isCollapsed ? (
+            <div className="flex w-full items-center justify-center gap-1.5">
+              <a href="/dashboard">
+                <Logo className="w-7 h-7 shrink-0" withText={false} />
+              </a>
+              <button 
+                onClick={() => setIsCollapsed(false)}
+                className="p-1 rounded-md text-textSecondary hover:bg-white/10 hover:text-primary transition-colors hidden md:block"
+                title="Expand Sidebar"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex w-full items-center justify-between">
+              <a href="/dashboard" className="flex items-center gap-3">
+                <Logo className="w-8 h-8 shrink-0" withText={true} />
+              </a>
+              <button 
+                onClick={() => setIsCollapsed(true)}
+                className="p-1.5 rounded-lg text-textSecondary hover:bg-white/10 hover:text-primary transition-colors hidden md:block"
+                title="Collapse Sidebar"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={() => setIsMobileOpen(false)}
+                className="p-1.5 rounded-lg text-textSecondary hover:bg-white/10 hover:text-primary transition-colors md:hidden"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          )}
+        </div>
 
       <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto overflow-x-hidden">
         {navItems.map((item) => {
@@ -98,6 +135,7 @@ const Sidebar = () => {
             <Link
               key={item.path}
               to={item.path}
+              onClick={() => setIsMobileOpen(false)}
               title={isCollapsed ? item.label : undefined}
               className={clsx(
                 "flex items-center px-4 py-3 rounded-xl transition-all duration-200",
@@ -125,7 +163,7 @@ const Sidebar = () => {
 
       <div className="p-4 border-t border-white/5 overflow-hidden whitespace-nowrap space-y-2">
         <button
-          onClick={toggleTheme}
+          onClick={() => { toggleTheme(); setIsMobileOpen(false); }}
           title={isCollapsed ? "Toggle Theme" : undefined}
           className={clsx(
             "flex w-full items-center px-4 py-3 rounded-xl text-textSecondary hover:bg-white/5 hover:text-primary transition-all duration-200",
@@ -147,7 +185,7 @@ const Sidebar = () => {
           </AnimatePresence>
         </button>
         <button
-          onClick={logout}
+          onClick={() => { logout(); setIsMobileOpen(false); }}
           title={isCollapsed ? "Logout" : undefined}
           className={clsx(
             "flex w-full items-center px-4 py-3 rounded-xl text-textSecondary hover:bg-white/5 hover:text-warning transition-all duration-200",
@@ -170,6 +208,7 @@ const Sidebar = () => {
         </button>
       </div>
     </motion.div>
+    </>
   );
 };
 
